@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benny Hartnett</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(45deg, #1e1e1e, #333);
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+            animation: moveBackground 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBackground {
+            from { background-position: 0 0; }
+            to { background-position: 100% 100%; }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 1;
+            transition: transform 0.1s ease-out;
+        }
+
+        header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3em;
+            margin: 0;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.3s ease-out;
+        }
+
+        .fade-scale-in {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .fade-scale-out {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        main {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #6e7dff, #88e5ff);
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .box i {
+            font-size: 2.5em;
+        }
+
+        .box a {
+            color: #fff;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .box:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="container" id="container">
+        <header>
+            <h1 id="dynamic-text">Benny Hartnett</h1>
+        </header>
+        <main>
+            <div class="box" id="linkedin">
+                <a href="https://www.linkedin.com/in/dev-dc/" target="_blank">
+                    <i class="fab fa-linkedin"></i>
+                </a>
+            </div>
+            <div class="box" id="rocket">
+                <a href="https://example.com/rocket-ship" target="_blank">
+                    <i class="fas fa-rocket"></i>
+                </a>
+            </div>
+            <div class="box" id="email">
+                <a href="mailto:me@bennyhartnett.com">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('container');
+            const boxes = document.querySelectorAll('.box');
+            const dynamicText = document.getElementById('dynamic-text');
+
+            const words = [
+                "Innovation",
+                "Software Development",
+                "Systems Engineering",
+                "IoT",
+                "Solutions Architecture",
+                "Generative AI",
+                "Benny Hartnett"
+            ];
+
+            let wordIndex = 0;
+
+            const changeText = () => {
+                if (wordIndex < words.length) {
+                    dynamicText.classList.remove('fade-scale-in');
+                    dynamicText.classList.add('fade-scale-out');
+                    setTimeout(() => {
+                        dynamicText.textContent = words[wordIndex];
+                        dynamicText.classList.remove('fade-scale-out');
+                        dynamicText.classList.add('fade-scale-in');
+                        wordIndex++;
+                    }, 150); // Quick fade and scale transition
+                } else {
+                    clearInterval(interval);
+                    showButtons(); // Show buttons after text finishes
+                }
+            };
+
+            const showButtons = () => {
+                boxes.forEach((box, index) => {
+                    setTimeout(() => {
+                        box.style.opacity = 1;
+                        box.style.transform = 'scale(1)';
+                    }, 200 * index); // Staggered appearance for buttons
+                });
+            };
+
+            const interval = setInterval(changeText, 500); // Faster interval timing
+
+            document.addEventListener('mousemove', (e) => {
+                const x = (e.pageX - window.innerWidth / 2) / 100;
+                const y = (e.pageY - window.innerHeight / 2) / 100;
+
+                container.style.transform = `translateX(${x * 2}px) translateY(${y * 2}px)`;
+
+                dynamicText.style.transform = `translateX(${x}px) translateY(${y}px) rotateX(${y * 3}deg) rotateY(${x * 3}deg)`;
+
+                boxes.forEach((box, index) => {
+                    const boxX = x * (index + 1) * 1.5;
+                    const boxY = y * (index + 1) * 1.5;
+                    box.style.transform = `translateX(${boxX}px) translateY(${boxY}px) rotateX(${y * 3}deg) rotateY(${x * 3}deg)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
