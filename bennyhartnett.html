@@ -85,7 +85,7 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
             opacity: 0;
             transform: scale(0.9);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out, background-color 3s linear;
             cursor: pointer;
         }
 
@@ -97,6 +97,14 @@
         .box:hover {
             transform: scale(1.1);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            animation: rgbCycle 5s infinite linear;
+        }
+
+        @keyframes rgbCycle {
+            0% { background-color: #ff0000; }
+            33% { background-color: #00ff00; }
+            66% { background-color: #0000ff; }
+            100% { background-color: #ff0000; }
         }
     </style>
 </head>
@@ -134,22 +142,50 @@
                 "Benny Hartnett"
             ];
 
-            let wordIndex = 0;
+            let queue = [];
+            let processing = false;
+            const maxQueueSize = 1;
 
-            const changeText = () => {
-                if (wordIndex < words.length) {
+            const processQueue = async () => {
+                if (processing) return;
+                processing = true;
+
+                while (queue.length > 0) {
+                    const { text, resolve } = queue.shift();
+                    await fadeOutText();
+                    dynamicText.textContent = text;
+                    await fadeInText();
+                    resolve();
+                }
+
+                processing = false;
+            };
+
+            const enqueueTransition = (text) => {
+                return new Promise((resolve) => {
+                    if (queue.length >= maxQueueSize) {
+                        queue[queue.length - 1] = { text, resolve };
+                    } else {
+                        queue.push({ text, resolve });
+                    }
+                    processQueue();
+                });
+            };
+
+            const fadeOutText = () => {
+                return new Promise((resolve) => {
                     dynamicText.classList.remove('fade-scale-in');
                     dynamicText.classList.add('fade-scale-out');
-                    setTimeout(() => {
-                        dynamicText.textContent = words[wordIndex];
-                        dynamicText.classList.remove('fade-scale-out');
-                        dynamicText.classList.add('fade-scale-in');
-                        wordIndex++;
-                    }, 150); // Quick fade and scale transition
-                } else {
-                    clearInterval(interval);
-                    showButtons(); // Show buttons after text finishes
-                }
+                    setTimeout(resolve, 300); // Match original timing
+                });
+            };
+
+            const fadeInText = () => {
+                return new Promise((resolve) => {
+                    dynamicText.classList.remove('fade-scale-out');
+                    dynamicText.classList.add('fade-scale-in');
+                    setTimeout(resolve, 300); // Match original timing
+                });
             };
 
             const showButtons = () => {
@@ -161,7 +197,14 @@
                 });
             };
 
-            const interval = setInterval(changeText, 500); // Faster interval timing
+            const changeText = async () => {
+                for (const word of words) {
+                    await enqueueTransition(word);
+                }
+                showButtons(); // Show buttons after all text finishes
+            };
+
+            changeText(); // Start the text change sequence
 
             document.addEventListener('mousemove', (e) => {
                 const x = (e.pageX - window.innerWidth / 2) / 100;
@@ -189,6 +232,31 @@
 
             document.getElementById('email').addEventListener('click', () => {
                 window.location.href = 'mailto:me@bennyhartnett.com';
+            });
+
+            // Add hover effects to change text with the same transition effect
+            document.getElementById('linkedin').addEventListener('mouseenter', () => {
+                enqueueTransition("LinkedIn");
+            });
+
+            document.getElementById('linkedin').addEventListener('mouseleave', () => {
+                enqueueTransition("Benny Hartnett");
+            });
+
+            document.getElementById('rocket').addEventListener('mouseenter', () => {
+                enqueueTransition("Experiments");
+            });
+
+            document.getElementById('rocket').addEventListener('mouseleave', () => {
+                enqueueTransition("Benny Hartnett");
+            });
+
+            document.getElementById('email').addEventListener('mouseenter', () => {
+                enqueueTransition("Mail");
+            });
+
+            document.getElementById('email').addEventListener('mouseleave', () => {
+                enqueueTransition("Benny Hartnett");
             });
         });
 
