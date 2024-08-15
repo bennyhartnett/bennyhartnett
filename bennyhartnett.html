@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Benny Hartnett</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
+    <link id="favicon" rel="icon" href="https://img.icons8.com/material-outlined/24/000000/console.png">
     <style>
         body {
             margin: 0;
@@ -48,6 +49,8 @@
             font-family: 'Poppins', sans-serif;
             font-size: 3em;
             margin: 0;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             opacity: 0;
             transform: scale(0.9);
             transition: all 0.3s ease-out;
@@ -79,30 +82,21 @@
             height: 120px;
             background: linear-gradient(45deg, #6e7dff, #88e5ff);
             border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
             opacity: 0;
             transform: scale(0.9);
             transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+            cursor: pointer;
         }
 
         .box i {
             font-size: 2.5em;
-        }
-
-        .box a {
-            color: #fff;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .box:hover {
             transform: scale(1.1);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
         }
     </style>
 </head>
@@ -114,19 +108,13 @@
         </header>
         <main>
             <div class="box" id="linkedin">
-                <a href="https://www.linkedin.com/in/dev-dc/" target="_blank">
-                    <i class="fab fa-linkedin"></i>
-                </a>
+                <i class="fab fa-linkedin"></i>
             </div>
             <div class="box" id="rocket">
-                <a href="https://example.com/rocket-ship" target="_blank">
-                    <i class="fas fa-rocket"></i>
-                </a>
+                <i class="fas fa-rocket"></i>
             </div>
             <div class="box" id="email">
-                <a href="mailto:me@bennyhartnett.com">
-                    <i class="fas fa-envelope"></i>
-                </a>
+                <i class="fas fa-envelope"></i>
             </div>
         </main>
     </div>
@@ -189,7 +177,73 @@
                     box.style.transform = `translateX(${boxX}px) translateY(${boxY}px) rotateX(${y * 3}deg) rotateY(${x * 3}deg)`;
                 });
             });
+
+            // Add event listeners for box clicks
+            document.getElementById('linkedin').addEventListener('click', () => {
+                window.open('https://www.linkedin.com/in/dev-dc/', '_blank');
+            });
+
+            document.getElementById('rocket').addEventListener('click', () => {
+                window.open('https://example.com/rocket-ship', '_blank');
+            });
+
+            document.getElementById('email').addEventListener('click', () => {
+                window.location.href = 'mailto:me@bennyhartnett.com';
+            });
         });
+
+        function terminalTitle() {
+            let title = "root@benny:"; // Initial prompt
+            let cursor = true;
+            let speed = 500; // Speed in milliseconds for blinking
+            let typingSpeed = 200; // Speed in milliseconds for typing
+            let command = " sudo rm -rf / --no-preserve-root"; // Command to type out
+            let currentIndex = 0;
+
+            function blinkCursor() {
+                document.title = cursor ? `${title}_` : `${title} `;
+                cursor = !cursor;
+                setTimeout(blinkCursor, speed);
+            }
+
+            function typeCommand() {
+                if (currentIndex < command.length) {
+                    title += command.charAt(currentIndex);
+                    currentIndex++;
+                    setTimeout(typeCommand, typingSpeed);
+                } else {
+                    blinkCursor(); // Resume blinking cursor after typing
+                }
+            }
+
+            setTimeout(typeCommand, 3000); // Start typing after 3 seconds
+            blinkCursor(); // Start blinking cursor initially
+        }
+
+        // Favicon animation function
+        function animateFavicon() {
+            const icons = [
+                "https://img.icons8.com/material-outlined/24/000000/console.png", // Terminal icon
+                "https://img.icons8.com/material-outlined/24/000000/wifi.png",    // Wi-Fi icon
+                "https://img.icons8.com/ios-glyphs/30/000000/rocket--v1.png"      // Rocket icon
+            ];
+            let currentIndex = 0;
+            const speed = 1000; // Speed in milliseconds (1 second) for each icon switch
+
+            function toggleFavicon() {
+                document.getElementById('favicon').setAttribute('href', icons[currentIndex]);
+                currentIndex = (currentIndex + 1) % icons.length; // Loop through all icons
+                setTimeout(toggleFavicon, speed);
+            }
+
+            toggleFavicon(); // Start the animation effect
+        }
+
+        // Ensure both functions run on window load
+        window.onload = function() {
+            terminalTitle();
+            animateFavicon();
+        };
     </script>
 </body>
 </html>
