@@ -1,4 +1,4 @@
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?logo=linkedin)](https://www.linkedin.com/in/dev-dc/)
+[![LinkedIn](https://img.shields.io/badge/Linked-In-blue?logo=linkedin)](https://www.linkedin.com/in/dev-dc/)
 
 ![abstract-white-wave](assets/abstract-white-wave-black-background-3d-rendering-3d-illustration_899451-1765.jpg)
 ![banner-noise-texture](assets/black-white-abstract-banner-noise-texture-poster-header-cover-wallpaper-design-grainy-artistic-background-digital-design-creative-visual-projects_1132312-12230.jpg)
